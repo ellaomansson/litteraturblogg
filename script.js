@@ -1,80 +1,69 @@
-// script.js
-// Enkel men komplett frontend: renderar böcker, filter, sökning, lägg till, localStorage, modal, tema.
-
-const STORAGE_KEY = "litcorner.books.v1";
-
-// startdata
-const sampleBooks = [
+const books = [
   {
-    id: cryptoRandomId(),
-    title: "Den oändliga historien",
-    author: "Michael Ende",
-    year: 1979,
-    genre: "Fantasy",
-    description: "En klassisk fantasifabel om mod, berättelser och verklighetens gränser."
-  },
-  {
-    id: cryptoRandomId(),
-    title: "Svindelns logik",
-    author: "Elin Wägner",
-    year: 1915,
+    title: "The Goldfinch",
+    author: "Donna Tartt",
+    year: 2013,
     genre: "Roman",
-    description: "En tidig 1900-talsroman som utforskar identitet och samhällsomvandling."
+    analysis: "En komplex coming-of-age-berättelse med fokus på trauma och konst."
   },
   {
-    id: cryptoRandomId(),
-    title: "Främlingen",
-    author: "Albert Camus",
-    year: 1942,
-    genre: "Existentialism",
-    description: "Kort roman om absurditet, ansvar och mänsklig alienation."
+    title: "American Psycho",
+    author: "Bret Easton Ellis",
+    year: 1991,
+    genre: "Satir / Thriller",
+    analysis: "En mörk och satirisk skildring av 1980-talets yuppiekultur och konsumism."
+  },
+  {
+    title: "Slouching Towards Bethlehem",
+    author: "Joan Didion",
+    year: 1968,
+    genre: "Essä",
+    analysis: "En samling essäer som skildrar amerikansk kultur och samhälle på 1960-talet."
   }
 ];
 
-function cryptoRandomId(){
-  return "id-" + Math.random().toString(36).slice(2,10);
+// Funktion för att generera bokkort
+function displayBooks(filter = "all", search = "") {
+  const bookList = document.getElementById("bookList");
+  bookList.innerHTML = "";
+
+  let filteredBooks = books.filter(book => {
+    return (filter === "all" || book.author === filter) &&
+           (book.title.toLowerCase().includes(search) || book.author.toLowerCase().includes(search));
+  });
+
+  filteredBooks.forEach(book => {
+    const card = document.createElement("div");
+    card.className = "book-card";
+    card.innerHTML = `
+      <h3>${book.title}</h3>
+      <p><strong>Författare:</strong> ${book.author}</p>
+      <p><strong>År:</strong> ${book.year}</p>
+      <p><strong>Genre:</strong> ${book.genre}</p>
+      <p><strong>Analys:</strong> ${book.analysis}</p>
+    `;
+    bookList.appendChild(card);
+  });
 }
 
-// UI element-referenser
-const booksGrid = document.getElementById("booksGrid");
-const bookTpl = document.getElementById("bookCardTemplate");
-const searchInput = document.getElementById("search");
-const genreFilter = document.getElementById("genreFilter");
-const sortSelect = document.getElementById("sortSelect");
-const addBookForm = document.getElementById("addBookForm");
-const countBooks = document.getElementById("countBooks");
-const uniqueGenres = document.getElementById("uniqueGenres");
-const modal = document.getElementById("modal");
-const modalBody = document.getElementById("modalBody");
-const modalClose = document.getElementById("modalClose");
-const themeToggle = document.getElementById("themeToggle");
-const clearStorageBtn = document.getElementById("clearStorage");
+// Fyll dropdown med författare
+const authorFilter = document.getElementById("authorFilter");
+const authors = [...new Set(books.map(book => book.author))];
+authors.forEach(author => {
+  const option = document.createElement("option");
+  option.value = author;
+  option.textContent = author;
+  authorFilter.appendChild(option);
+});
 
-let books = loadBooks();
+// Event listeners
+authorFilter.addEventListener("change", () => {
+  displayBooks(authorFilter.value, document.getElementById("searchInput").value.toLowerCase());
+});
 
-// init
-populateGenreOptions();
-renderBooks();
-attachEventListeners();
-restoreTheme();
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  displayBooks(authorFilter.value, e.target.value.toLowerCase());
+});
 
-// --- functions ---
-function loadBooks(){
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleBooks));
-      return structuredClone(sampleBooks);
-    }
-    return JSON.parse(raw);
-  } catch(e){
-    console.error("Kunde inte läsa localStorage, använder sampledata", e);
-    return structuredClone(sampleBooks);
-  }
-}
-
-function saveBooks(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
-  populateGenreOptions();
-  updateStats();
-}
+// Initial rendering
+displayBooks();
