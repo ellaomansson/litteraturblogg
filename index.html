@@ -1,110 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Litteraturhörnan</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Litteraturanalyser</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <h1 class="logo">📚 Litteraturhörnan</h1>
-      <div class="controls">
-        <label class="visually-hidden" for="search">Sök böcker</label>
-        <input id="search" type="search" placeholder="Sök titel, författare..." />
-
-        <select id="genreFilter" aria-label="Filtrera på genre">
-          <option value="all">Alla genrer</option>
-        </select>
-
-        <select id="sortSelect" aria-label="Sortera">
-          <option value="title-asc">Titel ↑</option>
-          <option value="title-desc">Titel ↓</option>
-          <option value="year-desc">Nyaste först</option>
-          <option value="year-asc">Äldst först</option>
-        </select>
-
-        <button id="themeToggle" aria-pressed="false" title="Byt tema">🌗</button>
-      </div>
-    </div>
+  <header>
+    <h1>📚 Litteraturanalyser</h1>
   </header>
 
-  <main class="container main-grid">
-    <section class="left-col">
-      <div class="card add-card">
-        <h2>Lägg till bok</h2>
-        <form id="addBookForm">
-          <label>Titel
-            <input name="title" required />
-          </label>
-          <label>Författare
-            <input name="author" required />
-          </label>
-          <label>År
-            <input name="year" type="number" min="0" placeholder="Ex. 2020" />
-          </label>
-          <label>Genre
-            <input name="genre" placeholder="Ex. Roman, Sci-fi" />
-          </label>
-          <label>Beskrivning
-            <textarea name="description" rows="3" placeholder="Kort beskrivning"></textarea>
-          </label>
-          <div class="form-row">
-            <button type="submit" class="btn primary">Lägg till</button>
-            <button type="button" id="clearStorage" class="btn danger">Återställ</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="card stats">
-        <h3>Snabbstatistik</h3>
-        <ul>
-          <li id="countBooks">Böcker: 0</li>
-          <li id="uniqueGenres">Genrer: 0</li>
-        </ul>
-      </div>
-
-      <div class="card help">
-        <h3>Tips</h3>
-        <p>Sök på titel eller författare, filtrera efter genre eller sortera listan. Klicka på en bok för mer info.</p>
-      </div>
+  <main>
+    <section class="search-section">
+      <input type="text" id="searchInput" placeholder="Sök författare eller bok...">
+      <select id="authorFilter">
+        <option value="all">Alla författare</option>
+      </select>
     </section>
 
-    <section class="right-col">
-      <div id="booksGrid" class="books-grid" aria-live="polite"></div>
+    <section id="bookList" class="book-list">
+      <!-- Bokkort genereras här av JavaScript -->
     </section>
   </main>
 
-  <!-- Modal för detaljer -->
-  <div id="modal" class="modal" role="dialog" aria-hidden="true">
-    <div class="modal-content">
-      <button id="modalClose" class="modal-close" aria-label="Stäng">✖</button>
-      <div id="modalBody"></div>
-    </div>
-  </div>
-
-  <footer class="site-footer">
-    <div class="container">
-      <small>Skapad med ❤️ — Litteraturhörnan · Exempelprojekt</small>
-    </div>
+  <footer>
+    <p>© 2025 Litteraturhörnan</p>
   </footer>
 
-  <template id="bookCardTemplate">
-    <article class="book-card" tabindex="0">
-      <div class="book-meta">
-        <h4 class="book-title"></h4>
-        <p class="book-author"></p>
-        <p class="book-year-genre"></p>
-      </div>
-      <p class="book-excerpt"></p>
-      <div class="card-actions">
-        <button class="btn small details-btn">Detaljer</button>
-        <button class="btn small remove-btn">Ta bort</button>
-      </div>
-    </article>
-  </template>
-
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
 </body>
 </html>
